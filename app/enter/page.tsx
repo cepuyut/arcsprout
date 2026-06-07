@@ -179,6 +179,21 @@ export default function EnterPage() {
     () => (error ? classifyError(error) : null),
     [error]
   );
+  const statusStripItems = [
+    { label: 'Network', value: 'Arc Testnet' },
+    { label: 'Threshold', value: 'Score >= 60' },
+    { label: 'Passport', value: 'Seed Identity' },
+    {
+      label: 'Status',
+      value: !isConnected
+        ? 'Not connected'
+        : wrongChain
+          ? 'Wrong chain'
+          : hasMintedSeed || txHash
+            ? 'Minted'
+            : 'Live',
+    },
+  ];
 
   useEffect(() => {
     setEvaluating(false);
@@ -310,9 +325,15 @@ export default function EnterPage() {
   return (
     <main className="page-shell">
       <section className="hero-grid enter-hero">
-        <div className="glass-card aurora-panel">
+        <div className="glass-card aurora-panel enter-hero-panel">
           <div className="eyebrow">Mint Flow Panel</div>
-          <h1 className="hero-title">Earn the first ArcSprout passport seed.</h1>
+          <h1 className="enter-title">
+            <span>Earn the</span>
+            <span>first</span>
+            <span>ArcSprout</span>
+            <span>passport</span>
+            <span>seed.</span>
+          </h1>
           <p className="hero-body">
             This flow is designed as the first layer of a modular identity
             product. Today it mints a seed. Tomorrow it can unlock levels,
@@ -348,7 +369,7 @@ export default function EnterPage() {
           </div>
         </div>
 
-        <aside className="glass-card status-shell">
+        <aside className="glass-card status-shell enter-status-shell">
           <div className={`status-badge tone-${activeStage.tone}`}>
             {activeStage.label}
           </div>
@@ -400,6 +421,15 @@ export default function EnterPage() {
             </div>
           </div>
         </aside>
+      </section>
+
+      <section className="status-strip glass-card enter-status-strip">
+        {statusStripItems.map((item) => (
+          <div key={item.label} className="status-strip-item">
+            <span>{item.label}</span>
+            <strong>{item.value}</strong>
+          </div>
+        ))}
       </section>
 
       <section className="section-grid dual-column">

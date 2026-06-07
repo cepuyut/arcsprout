@@ -494,6 +494,57 @@ pre {
   max-width: 10ch;
 }
 
+.enter-hero-panel {
+  min-height: 760px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.enter-title {
+  display: grid;
+  gap: 0.04em;
+  margin-top: 0.35rem;
+  max-width: 8ch;
+  color: var(--text);
+  font-family: "Inter", "Neue Haas Unica", sans-serif;
+  font-size: clamp(3.4rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+}
+
+.enter-title span {
+  display: block;
+}
+
+.enter-hero-panel .hero-body {
+  max-width: 38ch;
+  margin-top: 1.25rem;
+  font-size: 1.02rem;
+}
+
+.enter-status-shell {
+  min-height: 760px;
+}
+
+.enter-status-shell h2 {
+  max-width: 8ch;
+  font-size: clamp(2.3rem, 4.8vw, 4.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.enter-status-strip {
+  margin-top: -0.5rem;
+  background: rgba(10, 22, 40, 0.82);
+}
+
+.enter-status-strip .status-strip-item {
+  min-height: 92px;
+}
+
 @keyframes drift {
   0%,
   100% {
