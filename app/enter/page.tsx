@@ -321,23 +321,49 @@ export default function EnterPage() {
 
   const activeStage = stageMap[flowStage];
   const breakdown = result?.breakdown;
+  const displayScore = result?.score ?? (hasMintedSeed || txHash ? 82 : 58);
+  const eligibilityLabel =
+    result?.eligible === true
+      ? 'Eligible'
+      : result?.eligible === false
+        ? 'Grinding needed'
+        : hasMintedSeed || txHash
+          ? 'Minted'
+          : 'Pending';
 
   return (
     <main className="page-shell">
+      <header className="topbar">
+        <div className="brand-mark" aria-label="ArcSprout">
+          A
+        </div>
+        <nav className="topnav" aria-label="Primary">
+          <Link href="/#how-it-works">How It Works</Link>
+          <Link href="/#tiers">Tiers</Link>
+          <Link href="/#activity">Activity</Link>
+          <Link href="/#docs">Docs</Link>
+        </nav>
+        <div className="topbar-actions">
+          <Link href="/" className="btn btn-secondary compact-btn">
+            Back to Overview
+          </Link>
+        </div>
+      </header>
+
       <section className="hero-grid enter-hero">
         <div className="glass-card aurora-panel enter-hero-panel">
-          <div className="eyebrow">Mint Flow Panel</div>
+          <div className="eyebrow">ArcSprout Entry</div>
           <h1 className="enter-title">
-            <span>Earn the</span>
-            <span>first</span>
-            <span>ArcSprout</span>
-            <span>passport</span>
+            <span>Check if</span>
+            <span>your wallet</span>
+            <span>can earn</span>
+            <span>the first</span>
             <span>seed.</span>
           </h1>
           <p className="hero-body">
-            This flow is designed as the first layer of a modular identity
-            product. Today it mints a seed. Tomorrow it can unlock levels,
-            quests, and member access.
+            ArcSprout turns real Arc activity into identity. Pass the trust
+            check, mint your seed, and grow into levels, quests, and fee-aware
+            membership over time.
           </p>
 
           <div className="hero-actions">
@@ -363,18 +389,50 @@ export default function EnterPage() {
                     ? 'Minting on Arc...'
                     : 'Run Passport Check'}
             </button>
-            <Link href="/" className="btn btn-secondary">
-              Back to Overview
-            </Link>
+            <a href="#flow-details" className="btn btn-secondary">
+              See Flow Details
+            </a>
+          </div>
+
+          <div className="hero-trust-list">
+            {enterTrustChecklist.map((item) => (
+              <div key={item} className="trust-pill">
+                <span className="trust-dot" />
+                {item}
+              </div>
+            ))}
           </div>
         </div>
 
         <aside className="glass-card status-shell enter-status-shell">
+          <div className="figure-top enter-figure-top">
+            <div className="figure-chip">Arc Testnet</div>
+            <div className="score-orb">
+              <div className="score-orb-inner">
+                <span>Score</span>
+                <strong>{displayScore}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="seed-avatar enter-seed-avatar" aria-hidden="true">
+            <div className="seed-head" />
+            <div className="seed-eye-bar" />
+            <div className="seed-body">
+              <div className="seed-logo">A</div>
+            </div>
+            <div className="seed-root" />
+          </div>
+
           <div className={`status-badge tone-${activeStage.tone}`}>
             {activeStage.label}
           </div>
           <h2>{activeStage.title}</h2>
           <p>{activeStage.body}</p>
+
+          <div className="connect-shell enter-connect-shell">
+            <ConnectButton />
+          </div>
 
           <div className="status-meta">
             <div className="status-meta-row">
@@ -396,11 +454,7 @@ export default function EnterPage() {
             <div className="status-meta-row">
               <span>Eligibility</span>
               <strong>
-                {result?.eligible === true
-                  ? 'Eligible'
-                  : result?.eligible === false
-                    ? 'Not eligible'
-                    : 'Pending'}
+                {eligibilityLabel}
               </strong>
             </div>
             <div className="status-meta-row">
@@ -432,13 +486,10 @@ export default function EnterPage() {
         ))}
       </section>
 
-      <section className="section-grid dual-column">
+      <section className="section-grid dual-column" id="flow-details">
         <div className="glass-card">
-          <div className="eyebrow">Wallet entry</div>
-          <h2>Connect and align before minting.</h2>
-          <div className="connect-shell">
-            <ConnectButton />
-          </div>
+          <div className="eyebrow">Wallet trust</div>
+          <h2>The mint stays wallet-native and explainable.</h2>
 
           <div className="slot-list compact-list">
             {enterTrustChecklist.map((item) => (
