@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWriteContract, useReadContract } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { CONTRACT_ADDRESS, CONTRACT_ABI, CHAIN_ID } from '@/lib/contract';
 import Link from 'next/link';
 
@@ -11,10 +11,7 @@ export default function EnterPage() {
   const [evaluating, setEvaluating] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
-  const [minting, setMinting] = useState(false);
-  const [txHash, setTxHash] = useState('');
-
-  const { writeContractAsync } = useWriteContract();
+  const [txHash, setTxHash] = useState<string>('');
 
   const { data: hasMinted } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
@@ -31,6 +28,7 @@ export default function EnterPage() {
     setEvaluating(true);
     setError('');
     setResult(null);
+    setTxHash('');
 
     try {
       const history = {
@@ -49,30 +47,28 @@ export default function EnterPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Evaluation failed');
       setResult(data);
+
+      // automatic mint if qualified in backend
+      if (data.signature) {
+        const mintRes = await fetch('/api/evaluate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            wallet: address,
+            score: data.score,
+            nonce: data.nonce,
+            signature: data.signature,
+          }),
+        });
+
+        const mintJson = await mintRes.json();
+        if (!mintRes.ok) throw new Error(mintJson.error || 'Mint failed');
+        setTxHash(mintJson.txHash);
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
       setEvaluating(false);
-    }
-  }
-
-  async function mint() {
-    if (!result?.signature) return;
-    setMinting(true);
-    setError('');
-
-    try {
-      const hash = await writeContractAsync({
-        address: CONTRACT_ADDRESS as `0x${string}`,
-        abi: CONTRACT_ABI,
-        functionName: 'mintSeed',
-        args: [address, result.score, result.nonce, result.signature],
-      });
-      setTxHash(hash);
-    } catch (err: any) {
-      setError(err?.shortMessage || err?.message || 'Mint failed');
-    } finally {
-      setMinting(false);
     }
   }
 
@@ -99,29 +95,19 @@ export default function EnterPage() {
             </div>
           ) : (
             <div className="card text-center">
-              <button
-                className="btn"
-                onClick={evaluateWallet}
-                disabled={evaluating}
-              >
+              <button className="btn" onClick={evaluateWallet} disabled={evaluating}>
                 {evaluating ? 'Evaluating...' : 'Evaluate My Wallet'}
               </button>
             </div>
           )}
 
-          {result && !txHash && (
+          {result && !txHash && !evaluating && (
             <div className="card">
               <h3 className="mb-2">AI Score: {result.score}/100</h3>
               {result.signature ? (
                 <>
-                  <p className="success mb-2">✅ Qualified! Ready to mint.</p>
-                  <button
-                    className="btn"
-                    onClick={mint}
-                    disabled={minting}
-                  >
-                    {minting ? 'Minting...' : 'Mint Seed NFT'}
-                  </button>
+                  <p className="success mb-2">✅ Qualified! Minting now...</p>
+                  <p className="mb-2">Please wait a few seconds.</p>
                 </>
               ) : (
                 <>
@@ -154,13 +140,13 @@ export default function EnterPage() {
               </p>
             </div>
           )}
-        </>
-      )}
 
-      {error && (
-        <div className="card error">
-          <pre>{error}</pre>
-        </div>
+          {error && (
+            <div className="card error">
+              <pre>{error}</pre>
+            </div>
+          )}
+        </>
       )}
 
       <div className="text-center mt-4">
