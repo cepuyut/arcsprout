@@ -19,22 +19,33 @@ Frontend + Oracle API in one Next.js app, deployed to Vercel.
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/cepuyut/arc-node-concierge.git
+git clone https://github.com/cepuyut/arc-sprout.git
 # OR create new repo from this folder
-cd arc-node-concierge-vercel
+cd arc-sprout
 npm install
 ```
 
-### 2. Environment Variables
+## Environment Variables
 
-Create `.env.local` (NEVER commit):
+Create `.env.local` for local development (NEVER commit):
 
 ```env
-AI_ORACLE_PRIVATE_KEY=0x...your_private_key...
+AI_ORACLE_PRIVATE_KEY=0x...
 AI_ORACLE_ADDRESS=0x3847186F8ff9c6938CeD35ff8693e67675857303
-
 NEXT_PUBLIC_CONTRACT_ADDRESS=0x1146e20874b90F6c37f938dee7b8AF0b8522D218
 NEXT_PUBLIC_RPC_URL=https://rpc.testnet.arc.network
+```
+
+For Vercel deployment, use `.env.private` to bundle every key in one file that you can load via Vercel CLI/Dashboard without copy-pasting each line. This file is also ignored by git (see `.gitignore`).
+
+`.env.private` contents (fill real values, do not expose to repo):
+
+```env
+AI_ORACLE_PRIVATE_KEY=0x...
+AI_ORACLE_ADDRESS=0x3847186F8ff9c6938CeD35ff8693e67675857303
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x1146e20874b90F6c37f938dee7b8AF0b8522D218
+NEXT_PUBLIC_RPC_URL=https://rpc.testnet.arc.network
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=f1d172cb155659be29fdd1e6d4638ba8
 ```
 
 **IMPORTANT:** `AI_ORACLE_PRIVATE_KEY` is server-side only. Never prefix with `NEXT_PUBLIC_`.
