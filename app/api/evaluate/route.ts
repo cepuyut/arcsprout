@@ -6,11 +6,11 @@ const AI_ORACLE_ADDRESS = process.env.AI_ORACLE_ADDRESS;
 
 function calculateScore(history: any) {
   let score = 0;
-  score += history.arcTxCount > 0 ? 20 : 0;
+  score += history.arcTxCount > 0 ? 25 : 0;
   score += Math.min(history.arcTxCount || 0, 20);
   score += (history.usdcBalance || 0) > 0 ? 20 : 0;
-  score += Math.min(history.txCount || 0, 150) / 10;
-  score += Math.floor(Math.min(history.walletAgeDays || 0, 365) * 100 / 2430);
+  score += Math.min(history.txCount || 0, 100) / 5;
+  score += Math.floor(Math.min(history.walletAgeDays || 0, 365) * 100 / 365);
   return Math.min(Math.floor(score), 100);
 }
 
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     const score = calculateScore(history);
 
-    if (score < 60) {
+    if (score < 40) {
       return NextResponse.json({
         score,
         reason: `Score too low. Arc tx: ${history.arcTxCount}, Total tx: ${history.txCount}, USDC: ${history.usdcBalance}, Age: ${history.walletAgeDays}d`,
