@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import {
   useAccount,
@@ -61,6 +61,34 @@ function classifyError(message: string) {
     };
   }
 
+  if (lower.includes('insufficient funds') || lower.includes('balance')) {
+    return {
+      title: 'Wallet needs gas funds',
+      body: 'Add a little Arc Testnet balance, then try again so the mint transaction can be submitted.',
+    };
+  }
+
+  if (lower.includes('already minted') || lower.includes('already owns')) {
+    return {
+      title: 'This wallet already has a seed',
+      body: 'ArcSprout detected an existing passport seed for this wallet, so the mint step is intentionally blocked.',
+    };
+  }
+
+  if (lower.includes('nonce') && lower.includes('too low')) {
+    return {
+      title: 'Wallet transaction nonce is out of sync',
+      body: 'Refresh the wallet, then retry so the next transaction uses the correct nonce.',
+    };
+  }
+
+  if (lower.includes('wallet client is not ready')) {
+    return {
+      title: 'Wallet session is still warming up',
+      body: 'Reconnect the wallet or wait for the provider to finish initializing, then try again.',
+    };
+  }
+
   return {
     title: 'Mint flow needs another pass',
     body: message,
@@ -110,6 +138,7 @@ export default function EnterPage() {
   const [result, setResult] = useState<EvaluationResult | null>(null);
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState<string>('');
+  const [submittedTxHash, setSubmittedTxHash] = useState<string>('');
 
   const { data: hasMinted } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
@@ -137,6 +166,15 @@ export default function EnterPage() {
     [error]
   );
 
+  useEffect(() => {
+    setEvaluating(false);
+    setTxStep('idle');
+    setResult(null);
+    setError('');
+    setTxHash('');
+    setSubmittedTxHash('');
+  }, [address, chainId]);
+
   async function evaluateWallet() {
     if (!address || wrongChain) return;
 
@@ -145,6 +183,7 @@ export default function EnterPage() {
     setError('');
     setResult(null);
     setTxHash('');
+    setSubmittedTxHash('');
 
     try {
       const res = await fetch('/api/evaluate', {
@@ -172,6 +211,7 @@ export default function EnterPage() {
           throw new Error('Wallet client is not ready');
         }
 
+        setSubmittedTxHash(hash);
         setTxStep('minting');
         await publicClient.waitForTransactionReceipt({ hash });
         setTxHash(hash);
@@ -315,6 +355,22 @@ export default function EnterPage() {
                 {result?.score !== undefined ? `${result.score}/100` : 'Not scored yet'}
               </strong>
             </div>
+            <div className="status-meta-row">
+              <span>Last tx</span>
+              <strong>
+                {txHash || submittedTxHash ? (
+                  <a
+                    href={`https://testnet.arcscan.app/tx/${txHash || submittedTxHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View on explorer
+                  </a>
+                ) : (
+                  'No transaction yet'
+                )}
+              </strong>
+            </div>
           </div>
         </aside>
       </section>
@@ -425,10 +481,10 @@ export default function EnterPage() {
             ))}
           </div>
 
-          {txHash && (
+          {(txHash || submittedTxHash) && (
             <div className="hero-actions">
               <a
-                href={`https://testnet.arcscan.app/tx/${txHash}`}
+                href={`https://testnet.arcscan.app/tx/${txHash || submittedTxHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
@@ -445,6 +501,18 @@ export default function EnterPage() {
           <div className="eyebrow">Retry path</div>
           <h2>{errorCopy.title}</h2>
           <p>{errorCopy.body}</p>
+          {(txHash || submittedTxHash) && (
+            <div className="hero-actions">
+              <a
+                href={`https://testnet.arcscan.app/tx/${txHash || submittedTxHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-secondary"
+              >
+                Inspect Transaction
+              </a>
+            </div>
+          )}
           {error && <pre>{error}</pre>}
         </section>
       )}
