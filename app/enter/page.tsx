@@ -125,7 +125,7 @@ export default function EnterPage() {
                 </>
               ) : (
                 <>
-                  <p className="error mb-2">❌ Score too low ({result.score}/100). Need ≥60.</p>
+                  <p className="error mb-2">❌ Score too low ({result.score}/100). Need ≥40.</p>
                   <p>{result.reason}</p>
                   {result.actions && (
                     <ul style={{ marginTop: '1rem' }}>
