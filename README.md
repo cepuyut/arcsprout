@@ -1,4 +1,4 @@
-# ArcSprout — Vercel Edition
+# ArcSprout Vercel Edition
 
 Frontend + Oracle API in one Next.js app, deployed to Vercel.
 
