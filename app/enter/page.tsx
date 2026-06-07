@@ -70,18 +70,27 @@ function classifyError(message: string) {
 function getFlowStage(params: {
   isConnected: boolean;
   wrongChain: boolean;
+  hasMinted: boolean;
   evaluating: boolean;
   txStep: TxStep;
   txHash: string;
   result: EvaluationResult | null;
   error: string;
 }): FlowStage {
-  const { isConnected, wrongChain, evaluating, txStep, txHash, result, error } =
-    params;
+  const {
+    isConnected,
+    wrongChain,
+    hasMinted,
+    evaluating,
+    txStep,
+    txHash,
+    result,
+    error,
+  } = params;
 
   if (!isConnected) return 'visitor';
+  if (hasMinted || txHash) return 'mint-success';
   if (wrongChain) return 'wrong-network';
-  if (txHash) return 'mint-success';
   if (error) return 'error';
   if (evaluating) return 'evaluating';
   if (txStep === 'awaiting-confirmation') return 'awaiting-confirmation';
@@ -112,9 +121,11 @@ export default function EnterPage() {
 
   const wrongChain = isConnected && chainId !== CHAIN_ID;
   const tokenId = Number(hasMinted || 0);
+  const hasMintedSeed = tokenId > 0;
   const flowStage = getFlowStage({
     isConnected,
     wrongChain,
+    hasMinted: hasMintedSeed,
     evaluating,
     txStep,
     txHash,
@@ -257,9 +268,18 @@ export default function EnterPage() {
             <button
               className="btn btn-primary"
               onClick={evaluateWallet}
-              disabled={!isConnected || wrongChain || evaluating || txStep !== 'idle'}
+              disabled={
+                !isConnected ||
+                wrongChain ||
+                evaluating ||
+                txStep !== 'idle' ||
+                hasMintedSeed ||
+                !!txHash
+              }
             >
-              {evaluating
+              {hasMintedSeed || txHash
+                ? 'Passport already minted'
+                : evaluating
                 ? 'Evaluating wallet...'
                 : txStep === 'awaiting-confirmation'
                   ? 'Waiting for wallet...'
@@ -291,7 +311,9 @@ export default function EnterPage() {
             </div>
             <div className="status-meta-row">
               <span>Passport score</span>
-              <strong>{result?.score ? `${result.score}/100` : 'Not scored yet'}</strong>
+              <strong>
+                {result?.score !== undefined ? `${result.score}/100` : 'Not scored yet'}
+              </strong>
             </div>
           </div>
         </aside>
