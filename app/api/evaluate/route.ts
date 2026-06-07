@@ -4,12 +4,6 @@ import { Wallet, keccak256, solidityPacked, getBytes, randomBytes } from 'ethers
 const AI_ORACLE_PK = process.env.AI_ORACLE_PRIVATE_KEY;
 const AI_ORACLE_ADDRESS = process.env.AI_ORACLE_ADDRESS;
 
-if (!AI_ORACLE_PK || !AI_ORACLE_ADDRESS) {
-  throw new Error('AI_ORACLE_PRIVATE_KEY or AI_ORACLE_ADDRESS not set');
-}
-
-const wallet = new Wallet(AI_ORACLE_PK);
-
 function calculateScore(history: any) {
   let score = 0;
   score += history.arcTxCount > 0 ? 20 : 0;
@@ -22,8 +16,13 @@ function calculateScore(history: any) {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!AI_ORACLE_PK || !AI_ORACLE_ADDRESS || AI_ORACLE_PK === '0x...') {
+      return NextResponse.json({ error: 'AI_ORACLE_PRIVATE_KEY or AI_ORACLE_ADDRESS not set' }, { status: 500 });
+    }
+
     const body = await request.json();
-    const { wallet: walletAddr, history } = body;
+    const walletAddr = body?.wallet;
+    const history = body?.history;
 
     if (!walletAddr || !history) {
       return NextResponse.json({ error: 'Missing wallet or history' }, { status: 400 });
@@ -39,6 +38,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const signer = new Wallet(AI_ORACLE_PK);
     const nonce = keccak256(getBytes(randomBytes(32)));
     const structHash = keccak256(
       solidityPacked(
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         ['ARC_SPROUT_V1', walletAddr, score, nonce]
       )
     );
-    const sig = await wallet.signMessage(getBytes(structHash));
+    const sig = await signer.signMessage(getBytes(structHash));
 
     return NextResponse.json({ score, nonce, signature: sig });
   } catch (err: any) {

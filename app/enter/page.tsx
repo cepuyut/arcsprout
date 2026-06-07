@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWriteContract, useReadContract } from 'wagmi';
 import { CONTRACT_ADDRESS, CONTRACT_ABI, CHAIN_ID } from '@/lib/contract';
@@ -33,7 +33,6 @@ export default function EnterPage() {
     setResult(null);
 
     try {
-      // Build wallet history (mock for now — fetch from RPC in production)
       const history = {
         txCount: 42,
         arcTxCount: 5,
@@ -80,7 +79,7 @@ export default function EnterPage() {
   return (
     <main className="container">
       <div className="card text-center">
-        <h1 className="mb-2">🌱 Enter ArcSprout</h1>
+        <h1 className="mb-2">🌟 Enter ArcSprout</h1>
         <p className="mb-4">Connect wallet → AI evaluation → Mint Seed</p>
         <ConnectButton />
       </div>
@@ -129,7 +128,7 @@ export default function EnterPage() {
                   <p className="error mb-2">❌ Score too low ({result.score}/100). Need ≥60.</p>
                   <p>{result.reason}</p>
                   {result.actions && (
-                    <ul style= marginTop: '1rem' >
+                    <ul style={{ marginTop: '1rem' }}>
                       {result.actions.map((a: string, i: number) => (
                         <li key={i}>{a}</li>
                       ))}
@@ -148,7 +147,7 @@ export default function EnterPage() {
                   href={`https://testnet.arcscan.app/tx/${txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style= color: '#22c55e' 
+                  style={{ color: '#22c55e' }}
                 >
                   View on Arcscan
                 </a>
@@ -165,7 +164,7 @@ export default function EnterPage() {
       )}
 
       <div className="text-center mt-4">
-        <Link href="/" style= color: '#888' >← Back home</Link>
+        <Link href="/" style={{ color: '#888' }}>← Back home</Link>
       </div>
     </main>
   );
