@@ -14,15 +14,29 @@ import { enterTrustChecklist, postMintSteps } from '@/lib/content';
 
 type EvaluationResult = {
   score: number;
+  threshold?: number;
+  eligible?: boolean;
   nonce?: `0x${string}`;
   signature?: `0x${string}`;
   reason?: string;
   actions?: string[];
+  missingSignals?: string[];
+  breakdown?: {
+    arcPresence: number;
+    retention: number;
+    economicParticipation: number;
+    alignment: number;
+    qualityGuard: number;
+    total: number;
+    threshold: number;
+    eligible: boolean;
+  };
   signals?: {
     txCount: number;
     arcTxCount: number;
     nativeBalance: number;
     walletAgeDays: number;
+    activeDays: number;
   };
 };
 
@@ -291,6 +305,7 @@ export default function EnterPage() {
   };
 
   const activeStage = stageMap[flowStage];
+  const breakdown = result?.breakdown;
 
   return (
     <main className="page-shell">
@@ -352,7 +367,19 @@ export default function EnterPage() {
             <div className="status-meta-row">
               <span>Passport score</span>
               <strong>
-                {result?.score !== undefined ? `${result.score}/100` : 'Not scored yet'}
+                {result?.score !== undefined
+                  ? `${result.score}/${result.threshold || 100}`
+                  : 'Not scored yet'}
+              </strong>
+            </div>
+            <div className="status-meta-row">
+              <span>Eligibility</span>
+              <strong>
+                {result?.eligible === true
+                  ? 'Eligible'
+                  : result?.eligible === false
+                    ? 'Not eligible'
+                    : 'Pending'}
               </strong>
             </div>
             <div className="status-meta-row">
@@ -432,6 +459,15 @@ export default function EnterPage() {
           <div className="eyebrow">Eligibility guidance</div>
           <h2>Improve the wallet signal, then return.</h2>
           <p>{result.reason}</p>
+          {result.missingSignals && result.missingSignals.length > 0 && (
+            <div className="slot-list compact-list">
+              {result.missingSignals.map((signal) => (
+                <div key={signal} className="slot-card">
+                  Missing: {signal}
+                </div>
+              ))}
+            </div>
+          )}
           {result.actions && (
             <div className="slot-list compact-list">
               {result.actions.map((action) => (
@@ -446,8 +482,48 @@ export default function EnterPage() {
 
       {result?.signals && (
         <section className="glass-card">
-          <div className="eyebrow">Live signals</div>
-          <h2>Oracle input from the connected wallet.</h2>
+          <div className="eyebrow">Score breakdown</div>
+          <h2>How the wallet reached this result.</h2>
+          {breakdown && (
+            <div className="feature-grid">
+              <article className="feature-card">
+                <div className="eyebrow">Arc Presence</div>
+                <h3>{breakdown.arcPresence}/25</h3>
+                <p>Basic Arc usage and onchain presence.</p>
+              </article>
+              <article className="feature-card">
+                <div className="eyebrow">Retention</div>
+                <h3>{breakdown.retention}/20</h3>
+                <p>Return behavior across days and time.</p>
+              </article>
+              <article className="feature-card">
+                <div className="eyebrow">Economic</div>
+                <h3>{breakdown.economicParticipation}/25</h3>
+                <p>Early proxy for useful ecosystem activity.</p>
+              </article>
+              <article className="feature-card">
+                <div className="eyebrow">Alignment</div>
+                <h3>{breakdown.alignment}/15</h3>
+                <p>Signals that support ArcSprout growth.</p>
+              </article>
+              <article className="feature-card">
+                <div className="eyebrow">Quality Guard</div>
+                <h3>{breakdown.qualityGuard}/15</h3>
+                <p>Protection against low-quality spam behavior.</p>
+              </article>
+              <article className="feature-card">
+                <div className="eyebrow">Total</div>
+                <h3>
+                  {breakdown.total}/{breakdown.threshold}
+                </h3>
+                <p>{breakdown.eligible ? 'Eligible' : 'Keep grinding for entry.'}</p>
+              </article>
+            </div>
+          )}
+
+          <div className="eyebrow" style={{ marginTop: '1.25rem' }}>
+            Live signals
+          </div>
           <div className="status-meta">
             <div className="status-meta-row">
               <span>Arc activity</span>
@@ -465,6 +541,10 @@ export default function EnterPage() {
               <span>Wallet age proxy</span>
               <strong>{result.signals.walletAgeDays} days</strong>
             </div>
+            <div className="status-meta-row">
+              <span>Active days</span>
+              <strong>{result.signals.activeDays}</strong>
+            </div>
           </div>
         </section>
       )}
@@ -473,6 +553,11 @@ export default function EnterPage() {
         <section className="glass-card success-panel">
           <div className="eyebrow">Post-mint state</div>
           <h2>Your entry is complete. Here is what comes next.</h2>
+          {result?.breakdown && (
+            <p>
+              Final score <strong>{result.breakdown.total}/{result.breakdown.threshold}</strong>, minted from a wallet that earned its place.
+            </p>
+          )}
           <div className="slot-list compact-list">
             {postMintSteps.map((step) => (
               <div key={step} className="slot-card">

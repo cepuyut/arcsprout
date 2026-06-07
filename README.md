@@ -2,6 +2,9 @@
 
 Frontend + Oracle API in one Next.js app, deployed to Vercel.
 
+See [docs/ARCSPROUT_ECONOMIC_LOOP_V1.md](./docs/ARCSPROUT_ECONOMIC_LOOP_V1.md) for the current product direction around score, APT utility, NFT evolution, and the long-term economic loop.
+See [docs/ARCSPROUT_SCORE_MODEL_V1.md](./docs/ARCSPROUT_SCORE_MODEL_V1.md) for the first concrete eligibility-scoring draft.
+
 ## Architecture
 
 ```
