@@ -13,7 +13,7 @@ export const CONTRACT_ABI = [
                { "internalType": "uint8", "name": "_aiScore", "type": "uint8" },
                { "internalType": "bytes32", "name": "_aiNonce", "type": "bytes32" },
                { "internalType": "bytes", "name": "_aiSignature", "type": "bytes" }],
-    "name": "mintSeed",
+    "name": "mintSprout",
     "outputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -72,9 +72,10 @@ export const CONTRACT_ABI = [
       { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
       { "indexed": false, "internalType": "address", "name": "wallet", "type": "address" },
       { "indexed": false, "internalType": "uint8", "name": "aiScore", "type": "uint8" },
-      { "indexed": false, "internalType": "uint40", "name": "mintedAt", "type": "uint40" }
+      { "indexed": false, "internalType": "uint40", "name": "mintedAt", "type": "uint40" },
+      { "indexed": false, "internalType": "bytes32", "name": "aiNonce", "type": "bytes32" }
     ],
-    "name": "SeedMinted",
+    "name": "SproutMinted",
     "type": "event"
   }
 ];

@@ -6,10 +6,10 @@ Frontend + Oracle API in one Next.js app, deployed to Vercel.
 
 ```
 [Vercel]
-├── /api/evaluate  → AI Oracle (serverless, signs with AI_ORACLE_PRIVATE_KEY)
+├── /api/evaluate  → AI Oracle (serverless, validates and signs)
 ├── /api/health    → Health check
 ├── /              → Landing page
-├── /enter         → Connect wallet → Evaluate → Mint
+├── /enter         → Connect wallet → Evaluate → User mints from their wallet
 ```
 
 **No separate server needed.** Oracle runs as Vercel Serverless Function.

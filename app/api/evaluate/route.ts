@@ -1,19 +1,85 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Wallet, keccak256, solidityPacked, getBytes, randomBytes, JsonRpcProvider, ethers } from 'ethers';
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from '@/lib/contract';
+import { JsonRpcProvider, Wallet, keccak256, solidityPacked, getBytes, randomBytes, ethers } from 'ethers';
 
 const AI_ORACLE_PK = process.env.AI_ORACLE_PRIVATE_KEY;
 const AI_ORACLE_ADDRESS = process.env.AI_ORACLE_ADDRESS;
 const ARC_RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || 'https://rpc.testnet.arc.network';
+const ACTIVITY_LOOKBACK_BLOCKS = 512;
 
-function calculateScore(history: any) {
+type WalletSignals = {
+  txCount: number;
+  arcTxCount: number;
+  nativeBalance: number;
+  walletAgeDays: number;
+};
+
+function calculateScore(history: WalletSignals) {
   let score = 0;
   score += history.arcTxCount > 0 ? 25 : 0;
   score += Math.min(history.arcTxCount || 0, 20);
-  score += (history.usdcBalance || 0) > 0 ? 20 : 0;
+  score += (history.nativeBalance || 0) > 0 ? 20 : 0;
   score += Math.min(history.txCount || 0, 100) / 5;
   score += Math.floor(Math.min(history.walletAgeDays || 0, 365) * 100 / 365);
   return Math.min(Math.floor(score), 100);
+}
+
+async function collectWalletSignals(walletAddr: string): Promise<WalletSignals> {
+  const provider = new JsonRpcProvider(ARC_RPC_URL);
+  const wallet = walletAddr.toLowerCase();
+
+  const [balanceWei, txCount, latestBlockNumber] = await Promise.all([
+    provider.getBalance(walletAddr),
+    provider.getTransactionCount(walletAddr),
+    provider.getBlockNumber(),
+  ]);
+
+  const latestBlockHex = `0x${latestBlockNumber.toString(16)}`;
+  const latestBlock = await provider.send('eth_getBlockByNumber', [
+    latestBlockHex,
+    true,
+  ]);
+  const latestTimestamp = latestBlock?.timestamp
+    ? Number(latestBlock.timestamp)
+    : Math.floor(Date.now() / 1000);
+  const startBlock = Math.max(0, latestBlockNumber - ACTIVITY_LOOKBACK_BLOCKS);
+
+  let arcTxCount = 0;
+  let firstActivityTimestamp: number | null = null;
+
+  for (let blockNumber = latestBlockNumber; blockNumber >= startBlock; blockNumber--) {
+    const block = await provider.send('eth_getBlockByNumber', [
+      `0x${blockNumber.toString(16)}`,
+      true,
+    ]);
+    if (!block?.transactions?.length) continue;
+
+    for (const tx of block.transactions) {
+      const from = tx.from?.toLowerCase();
+      const to = tx.to?.toLowerCase();
+
+      if (from === wallet || to === wallet) {
+        arcTxCount += 1;
+        if (firstActivityTimestamp === null) {
+          firstActivityTimestamp = Number(block.timestamp);
+        }
+      }
+    }
+
+    if (arcTxCount >= 20) {
+      break;
+    }
+  }
+
+  const walletAgeDays = firstActivityTimestamp
+    ? Math.max(0, Math.floor((latestTimestamp - firstActivityTimestamp) / 86_400))
+    : 0;
+
+  return {
+    txCount,
+    arcTxCount,
+    nativeBalance: Number(ethers.formatEther(balanceWei)),
+    walletAgeDays,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -24,7 +90,6 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const walletAddr = body?.wallet;
-    const history = body?.history;
     const { score: bodyScore, nonce, signature } = body || {};
 
     // prepare evaluation from history OR accepted signed payload
@@ -33,7 +98,6 @@ export async function POST(request: NextRequest) {
     }
 
     if (bodyScore && nonce && signature) {
-      const signer = new Wallet(AI_ORACLE_PK);
       const expectedHash = keccak256(
         solidityPacked(
           ['string', 'address', 'uint8', 'bytes32'],
@@ -50,37 +114,21 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Signature verify failed: ' + err.message }, { status: 400 });
       }
 
-      const provider = new JsonRpcProvider(ARC_RPC_URL);
-      const oracleWallet = new Wallet(AI_ORACLE_PK, provider);
-
-      const mintData = new ethers.Interface(CONTRACT_ABI).encodeFunctionData('mintSeed', [
-        walletAddr,
-        bodyScore,
-        nonce,
-        signature,
-      ]);
-
-      const mintTx = await oracleWallet.sendTransaction({
-        to: CONTRACT_ADDRESS,
-        data: mintData,
-        gasLimit: 300_000,
-      });
-
-      const receipt = await mintTx.wait();
-      return NextResponse.json({ score: bodyScore, nonce, signature, txHash: receipt?.hash || mintTx.hash, ok: true });
+      // The contract requires `msg.sender === walletAddr`, so the frontend
+      // must submit the mint transaction from the connected wallet.
+      return NextResponse.json({ score: bodyScore, nonce, signature, ok: true });
     }
 
-    if (!history) {
-      return NextResponse.json({ error: 'Missing history' }, { status: 400 });
-    }
+    const history = await collectWalletSignals(walletAddr);
 
     const score = calculateScore(history);
 
-    if (score < 40) {
+    if (score < 60) {
       return NextResponse.json({
         score,
-        reason: `Score too low. Arc tx: ${history.arcTxCount}, Total tx: ${history.txCount}, USDC: ${history.usdcBalance}, Age: ${history.walletAgeDays}d`,
-        actions: ['Swap 10 USDC on ArcSwap', 'Bridge from Sepolia', 'Wait for wallet to age']
+        signals: history,
+        reason: `Score too low. Arc tx: ${history.arcTxCount}, Total tx: ${history.txCount}, Native balance: ${history.nativeBalance}, Age: ${history.walletAgeDays}d`,
+        actions: ['Make a small Arc Testnet transaction', 'Return after more wallet activity', 'Keep building recent onchain history']
       });
     }
 
@@ -94,7 +142,7 @@ export async function POST(request: NextRequest) {
     );
     const sig = await signer.signMessage(getBytes(structHash));
 
-    return NextResponse.json({ score, nonce: newNonce, signature: sig });
+    return NextResponse.json({ score, nonce: newNonce, signature: sig, signals: history });
   } catch (err: any) {
     console.error('/evaluate error:', err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
