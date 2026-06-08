@@ -70,10 +70,19 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="arc-emblem" aria-hidden="true">
-            <span className="arc-emblem-glow" />
-            <span className="arc-emblem-arch" />
-            <span className="arc-emblem-foot" />
+          <div className="community-stack" aria-hidden="true">
+            <div className="community-row">
+              <span>Arc House</span>
+              <strong>Community base</strong>
+            </div>
+            <div className="community-row">
+              <span>Architects</span>
+              <strong>Points-based growth</strong>
+            </div>
+            <div className="community-row">
+              <span>Agentic economy</span>
+              <strong>AI utility path</strong>
+            </div>
           </div>
 
           <div className="figure-foot">

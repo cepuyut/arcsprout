@@ -414,10 +414,19 @@ export default function EnterPage() {
             </div>
           </div>
 
-          <div className="arc-emblem enter-arc-emblem" aria-hidden="true">
-            <span className="arc-emblem-glow" />
-            <span className="arc-emblem-arch" />
-            <span className="arc-emblem-foot" />
+          <div className="community-stack enter-community-stack" aria-hidden="true">
+            <div className="community-row">
+              <span>Arc House</span>
+              <strong>Recognition path</strong>
+            </div>
+            <div className="community-row">
+              <span>Architects</span>
+              <strong>Contribution loop</strong>
+            </div>
+            <div className="community-row">
+              <span>Arc Testnet</span>
+              <strong>Stablecoin-native</strong>
+            </div>
           </div>
 
           <div className={`status-badge tone-${activeStage.tone}`}>

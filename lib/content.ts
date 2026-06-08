@@ -1,7 +1,7 @@
 export const homeHeroStats = [
   { label: 'Network', value: 'Arc Testnet' },
-  { label: 'Entry Rule', value: 'Score >= 60' },
-  { label: 'Passport Type', value: 'Base Identity' },
+  { label: 'Fee Model', value: 'USDC-native' },
+  { label: 'Community', value: 'Architects-ready' },
 ];
 
 export const homeTrustItems = [
@@ -12,11 +12,11 @@ export const homeTrustItems = [
 
 export const homeFlowSteps = [
   {
-    title: 'Connect your signal',
+    title: 'Connect your wallet',
     body: 'Bring your Arc wallet into the flow so ArcSprout can read a trustworthy onchain signal.',
   },
   {
-    title: 'Earn your passport seed',
+    title: 'Read the score',
     body: 'The oracle checks history, trust, and score before returning a signed eligibility result.',
   },
   {
@@ -27,19 +27,19 @@ export const homeFlowSteps = [
 
 export const homeModules = [
   {
-    eyebrow: 'Passport Layer',
-    title: 'Identity that can compound',
-    body: 'ArcSprout starts as an entry pass, then expands into progression, onchain reputation, and richer member states.',
+    eyebrow: 'Arc House',
+    title: 'A community base that stays transparent',
+    body: 'ArcSprout is meant to feel like a member home: clear rules, visible progress, and room for people to stay involved.',
   },
   {
-    eyebrow: 'Community Layer',
-    title: 'Utility that can deepen',
-    body: 'Future drops can unlock private channels, campaigns, event access, and collaborations tied to the same passport.',
+    eyebrow: 'Architects',
+    title: 'Recognition that grows with contribution',
+    body: 'The passport should reward the people who keep showing up, helping others, and moving the Arc ecosystem forward.',
   },
   {
-    eyebrow: 'Quest Layer',
-    title: 'Missions that change status',
-    body: 'Eligibility does not need to stay static. The product can grow into quests, milestones, and contribution-based advancement.',
+    eyebrow: 'Agentic Economy',
+    title: 'A path for AI-native utility',
+    body: 'The product should leave room for AI services, community tasks, and future value flows without a redesign.',
   },
 ];
 

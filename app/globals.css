@@ -533,10 +533,6 @@ pre {
   align-items: flex-start;
 }
 
-  .enter-arc-emblem {
-    width: min(100%, 220px);
-  }
-
 .enter-connect-shell {
   margin-top: 0.25rem;
 }
@@ -816,52 +812,35 @@ body::before {
   line-height: 1;
 }
 
-.arc-emblem {
-  position: relative;
-  width: min(100%, 320px);
-  aspect-ratio: 0.88;
-  margin: 0 auto;
+.community-stack {
   display: grid;
-  place-items: center;
-  isolation: isolate;
+  gap: 0.75rem;
+  padding: 0.25rem 0 0.1rem;
 }
 
-.arc-emblem-glow {
-  position: absolute;
-  inset: 8% 12% 4% 12%;
-  border-radius: 50% 50% 42% 42% / 48% 48% 44% 44%;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(96, 165, 250, 0.25), transparent 58%),
-    radial-gradient(circle at 50% 70%, rgba(232, 237, 245, 0.08), transparent 65%);
-  filter: blur(12px);
-  opacity: 0.9;
+.community-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(96, 165, 250, 0.12);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.arc-emblem-arch {
-  position: absolute;
-  inset: 4% 20% 18% 20%;
-  border: 22px solid rgba(232, 237, 245, 0.96);
-  border-bottom: 0;
-  border-radius: 240px 240px 0 0;
-  background: linear-gradient(180deg, rgba(232, 237, 245, 0.08), transparent 86%);
-  box-shadow:
-    inset 0 0 0 1px rgba(148, 163, 184, 0.25),
-    0 16px 34px rgba(0, 0, 0, 0.18);
+.community-row span {
+  color: var(--muted);
+  font-family: "Geist Mono", "JetBrains Mono", monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.arc-emblem-foot {
-  position: absolute;
-  right: 22%;
-  bottom: 18%;
-  width: 44%;
-  height: 12%;
-  border-radius: 0 0 18px 18px;
-  background: linear-gradient(180deg, rgba(232, 237, 245, 0.98), rgba(148, 163, 184, 0.9));
-  clip-path: polygon(0 0, 100% 14%, 93% 100%, 0 100%);
-  transform: skewX(-10deg);
-  box-shadow:
-    inset 0 0 0 1px rgba(148, 163, 184, 0.2),
-    0 0 24px rgba(96, 165, 250, 0.22);
+.community-row strong {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
 .seed-avatar {
@@ -1276,11 +1255,10 @@ body::before {
     font-size: 2.4rem;
   }
 
-.enter-arc-emblem {
-  width: min(100%, 280px);
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
-}
+  .community-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
   .site-footer {
     grid-template-columns: 1fr;
