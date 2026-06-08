@@ -13,116 +13,150 @@ import {
 
 export default function Home() {
   return (
-    <main className="page-shell">
+    <main className="page-shell" id="main-content">
+      <a href="#overview" className="skip-link">
+        Skip to overview
+      </a>
       <header className="topbar">
-        <div className="brand-mark" aria-label="ArcSprout">
-          A
-        </div>
+        <Link href="/" className="brand-lockup" aria-label="ArcSprout">
+          <div className="brand-mark">A</div>
+          <div className="brand-copy">
+            <strong>ArcSprout</strong>
+            <span>Arc community passport</span>
+          </div>
+        </Link>
+
         <nav className="topnav" aria-label="Primary">
           <a href="#overview">Overview</a>
-          <a href="#how-it-works">How It Works</a>
+          <a href="#how-it-works">Flow</a>
           <a href="#progression">Progression</a>
-          <a href="#entry-path">Entry Path</a>
+          <a href="#entry-path">Eligibility</a>
         </nav>
+
         <div className="topbar-actions">
           <Link href="/enter" className="btn btn-primary compact-btn">
-            Check Eligibility
+            Check eligibility
           </Link>
         </div>
       </header>
 
-      <section className="home-reset-grid" id="overview">
-        <div className="glass-card home-reset-hero">
-          <div className="eyebrow">ArcSprout Passport</div>
-          <h1 className="home-reset-title">
-            Membership identity for the Arc community.
+      <section className="hero-shell" id="overview">
+        <div className="hero-main glass-card">
+          <div className="eyebrow">Arc House identity layer</div>
+          <h1 className="hero-title">
+            Passport the members who move Arc forward.
           </h1>
-          <p className="home-reset-body">
-            ArcSprout evaluates wallet activity, mints a base passport for
-            eligible members, and creates a clean path into progression,
-            recognition, and future utility across Arc.
+          <p className="hero-body">
+            ArcSprout is the clean entry point for community identity on Arc.
+            It evaluates meaningful wallet activity, mints a base passport for
+            eligible members, and leaves room for visible growth, roles, and
+            future utility.
           </p>
 
           <div className="hero-actions">
             <Link href="/enter" className="btn btn-primary">
-              Open Wallet Check
+              Open wallet check
             </Link>
-            <a href="#how-it-works" className="btn btn-secondary">
-              Understand the Flow
+            <a href="#progression" className="btn btn-secondary">
+              See progression
             </a>
           </div>
 
-          <div className="hero-trust-list home-reset-trust">
+          <div className="trust-row">
             {homeTrustItems.map((item) => (
-              <div key={item} className="trust-pill">
-                <span className="trust-dot" />
+              <div key={item} className="trust-chip">
+                <span className="trust-chip-dot" aria-hidden="true" />
                 {item}
               </div>
             ))}
           </div>
         </div>
 
-        <aside className="glass-card home-reset-aside">
-          <div className="aside-kicker">
+        <aside className="hero-side glass-card">
+          <div className="hero-side-top">
             <span className="figure-chip">Arc Testnet</span>
-            <span className="aside-caption">Live wallet gate</span>
+            <span className="mini-note">Live score gate</span>
           </div>
 
-          <div className="home-score-panel">
-            <div>
-              <span className="aside-label">Entry score</span>
-              <strong>82</strong>
+          <div className="arc-figure">
+            <div className="arc-score-ring">
+              <div className="arc-score-core">
+                <span>Score</span>
+                <strong>82</strong>
+              </div>
             </div>
-            <p>
-              A member-friendly wallet check that reads trust, activity, and
-              repeat engagement before minting the base passport.
-            </p>
+            <div className="arc-window" aria-hidden="true">
+              <div className="arc-window-foot" />
+            </div>
           </div>
 
-          <div className="home-rail-list">
+          <div className="rail-grid">
             {homeHeroStats.map((stat) => (
-              <div key={stat.label} className="home-rail-row">
+              <div key={stat.label} className="rail-row">
                 <span>{stat.label}</span>
                 <strong>{stat.value}</strong>
               </div>
             ))}
           </div>
-
-          <div className="home-side-note">
-            <div className="eyebrow">Arc House ready</div>
-            <p>
-              Built to feel like a calm home base for members, builders, and
-              future Architects who want visible growth instead of vague hype.
-            </p>
-          </div>
         </aside>
       </section>
 
-      <section className="proof-grid">
-        {homeProofCards.map((card) => (
-          <article key={card.title} className="glass-card proof-card">
-            <div className="eyebrow">{card.label}</div>
-            <h3>{card.title}</h3>
-            <p>{card.body}</p>
-          </article>
-        ))}
+      <section className="status-band glass-card">
+        <div className="status-band-item">
+          <span>Product role</span>
+          <strong>Membership identity</strong>
+        </div>
+        <div className="status-band-item">
+          <span>Network model</span>
+          <strong>Stablecoin-native Arc</strong>
+        </div>
+        <div className="status-band-item">
+          <span>Community lens</span>
+          <strong>Arc House + Architects</strong>
+        </div>
+        <div className="status-band-item">
+          <span>Mint logic</span>
+          <strong>Wallet score threshold</strong>
+        </div>
       </section>
 
-      <section className="section-grid" id="how-it-works">
+      <section className="section-shell">
         <div className="section-heading">
-          <div className="eyebrow">How it works</div>
-          <h2>A flow that hides complexity but keeps users in control.</h2>
+          <div className="eyebrow">Why ArcSprout exists</div>
+          <h2>Keep entry useful, predictable, and worth growing into.</h2>
           <p>
-            ArcSprout should explain the path in seconds: connect, get a
-            trustworthy score, mint the first passport layer, and keep growing
-            from there.
+            ArcSprout should not feel like a one-time NFT drop. It should feel
+            like the first layer of belonging inside Arc: easy to understand,
+            honest about the rules, and ready to support member growth.
           </p>
         </div>
 
-        <div className="timeline-grid">
+        <div className="proof-grid">
+          {homeProofCards.map((card) => (
+            <article key={card.title} className="proof-card glass-card">
+              <div className="eyebrow">{card.label}</div>
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-shell" id="how-it-works">
+        <div className="section-heading">
+          <div className="eyebrow">How it works</div>
+          <h2>One calm flow from wallet check to first passport mint.</h2>
+          <p>
+            The product should explain itself in seconds. Connect a wallet, see
+            an understandable score, mint the base passport if eligible, then
+            come back as progression expands.
+          </p>
+        </div>
+
+        <div className="flow-grid">
           {homeFlowSteps.map((step, index) => (
-            <article key={step.title} className="glass-card timeline-card">
-              <div className="timeline-index">0{index + 1}</div>
+            <article key={step.title} className="flow-card glass-card">
+              <div className="flow-index">0{index + 1}</div>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
             </article>
@@ -130,97 +164,113 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-grid" id="progression">
+      <section className="section-shell" id="progression">
+        <div className="feature-split">
+          <div className="section-heading">
+            <div className="eyebrow">Built around Arc</div>
+            <h2>Designed to fit Arc House, Architects, and future utility.</h2>
+            <p>
+              Arc already speaks in the language of contribution, community,
+              and transparent progression. ArcSprout should feel native to that
+              world instead of acting like an isolated mint page.
+            </p>
+          </div>
+
+          <div className="feature-stack">
+            {homeModules.map((module) => (
+              <article key={module.title} className="feature-panel glass-card">
+                <div className="eyebrow">{module.eyebrow}</div>
+                <h3>{module.title}</h3>
+                <p>{module.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell">
         <div className="section-heading">
-          <div className="eyebrow">Built for Arc</div>
-          <h2>Community, recognition, and AI utility should feel connected.</h2>
+          <div className="eyebrow">Progression path</div>
+          <h2>Make growth visible from the first passport layer.</h2>
           <p>
-            ArcSprout should sit naturally beside Arc House and the Architects
-            program: one place for identity, one path for recognition, and one
-            surface that can grow with the network.
+            Tiers, points, and roles should feel like a living community system.
+            The user should immediately understand that minting is the start,
+            not the finish.
           </p>
         </div>
 
-        <div className="feature-grid">
-          {homeModules.map((module) => (
-            <article key={module.title} className="glass-card feature-card">
-              <div className="eyebrow">{module.eyebrow}</div>
-              <h3>{module.title}</h3>
-              <p>{module.body}</p>
+        <div className="level-grid">
+          {passportLevels.map((level) => (
+            <article key={level.label} className="level-card glass-card">
+              <div className="level-kicker">{level.status}</div>
+              <h3>{level.label}</h3>
+              <p>{level.body}</p>
             </article>
+          ))}
+        </div>
+
+        <div className="slot-grid">
+          {homeMembershipMoments.map((item) => (
+            <div key={item} className="slot-card glass-card">
+              {item}
+            </div>
           ))}
         </div>
       </section>
 
-      <section className="section-grid dual-column" id="entry-path">
-        <div className="glass-card upgrade-panel">
-          <div className="eyebrow">Entry path</div>
-          <h2>Users who are not eligible yet should still feel guided.</h2>
-          <div className="upgrade-grid">
+      <section className="section-shell" id="entry-path">
+        <div className="entry-shell glass-card">
+          <div className="entry-copy">
+            <div className="eyebrow">For wallets that are not eligible yet</div>
+            <h2>Give people a real path forward, not a dead end.</h2>
+            <p>
+              Users who do not pass the first check should still feel welcomed
+              into the system. The guidance should point them toward meaningful
+              onchain behavior, not vague grinding.
+            </p>
+          </div>
+
+          <div className="entry-grid">
             {homeEligibilityActions.map((item, index) => (
-              <article key={item.title} className="upgrade-card">
-                <div className="upgrade-icon">0{index + 1}</div>
+              <article key={item.title} className="entry-card">
+                <div className="entry-card-count">0{index + 1}</div>
                 <div>
                   <h3>{item.title}</h3>
                   <p>{item.body}</p>
                 </div>
-                <span className="upgrade-tag">Path</span>
               </article>
             ))}
           </div>
 
-          <div className="score-bar-shell">
-            <div className="score-bar-labels">
+          <div className="score-panel">
+            <div className="score-panel-row">
               <span>Example wallet score</span>
               <strong>58</strong>
             </div>
-            <div className="score-bar-track">
-              <div className="score-bar-fill" style={{ width: '68%' }} />
+            <div className="score-track">
+              <div className="score-fill" style={{ width: '68%' }} />
             </div>
-            <div className="score-bar-meta">
-              <span>Target entry score</span>
-              <strong>2 points from mint readiness</strong>
+            <div className="score-panel-row score-panel-row-muted">
+              <span>Threshold for mint</span>
+              <strong>60+</strong>
             </div>
-          </div>
-        </div>
-
-        <div className="glass-card progression-panel">
-          <div className="eyebrow">Progression</div>
-          <h2>Designed for visible tiers, roles, and future member value.</h2>
-          <div className="level-grid">
-            {passportLevels.map((level) => (
-              <article key={level.label} className="level-card">
-                <div className="level-kicker">{level.status}</div>
-                <h3>{level.label}</h3>
-                <p>{level.body}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="progression-notes">
-            {homeMembershipMoments.map((item) => (
-              <div key={item} className="slot-card">
-                {item}
-              </div>
-            ))}
           </div>
         </div>
       </section>
 
-      <section className="glass-card membership-panel">
-        <div className="membership-copy">
-          <div className="eyebrow">Future module slots</div>
-          <h2>A structure that can absorb new community and product ideas.</h2>
+      <section className="glass-card modules-panel">
+        <div className="section-heading compact-heading">
+          <div className="eyebrow">Future slots</div>
+          <h2>A structure that can absorb more features without feeling broken.</h2>
           <p>
-            The page should stay easy to evolve when ArcSprout adds quests,
-            gated roles, AI services, community campaigns, or future value
-            mechanics.
+            As ArcSprout grows into quests, campaigns, AI services, and capped
+            member rewards, the page should stay modular and easy to extend.
           </p>
         </div>
 
-        <div className="slot-list">
+        <div className="slot-grid">
           {futureModuleSlots.map((slot) => (
-            <div key={slot} className="slot-card">
+            <div key={slot} className="slot-card glass-card">
               {slot}
             </div>
           ))}
@@ -228,12 +278,20 @@ export default function Home() {
       </section>
 
       <footer className="site-footer glass-card">
-        <div className="brand-mark footer-mark">A</div>
+        <div className="footer-brand">
+          <div className="brand-mark footer-mark">A</div>
+          <div className="brand-copy">
+            <strong>ArcSprout</strong>
+            <span>Membership identity on Arc Testnet</span>
+          </div>
+        </div>
+
         <div className="footer-copy">
-          <span>Contract address</span>
+          <span>Contract</span>
           <strong>0x1146e20874b90F6c37f938dee7b8AF0b8522D218</strong>
         </div>
-        <div className="footer-meta">Built on Arc Testnet</div>
+
+        <div className="footer-meta">Built for Arc House era community growth</div>
       </footer>
     </main>
   );

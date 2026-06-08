@@ -64,34 +64,34 @@ function classifyError(message: string) {
   ) {
     return {
       title: 'Wallet confirmation was cancelled',
-      body: 'No transaction was sent. You can review the flow and try again whenever you are ready.',
+      body: 'No transaction was sent. Review the flow and try again when you are ready.',
     };
   }
 
   if (lower.includes('switch to arc testnet') || lower.includes('chain')) {
     return {
       title: 'Network needs attention',
-      body: 'Switch to Arc Testnet before retrying so the wallet and contract stay aligned.',
+      body: 'Switch to Arc Testnet so the wallet and contract stay aligned before retrying.',
     };
   }
 
   if (lower.includes('insufficient funds') || lower.includes('balance')) {
     return {
       title: 'Wallet needs gas funds',
-      body: 'Add a little Arc Testnet balance, then try again so the mint transaction can be submitted.',
+      body: 'Add a small Arc Testnet balance, then retry the mint transaction.',
     };
   }
 
   if (lower.includes('already minted') || lower.includes('already owns')) {
     return {
-      title: 'This wallet already has a seed',
-      body: 'ArcSprout detected an existing passport seed for this wallet, so the mint step is intentionally blocked.',
+      title: 'This wallet already has a passport seed',
+      body: 'ArcSprout detected an existing seed, so the mint path is intentionally blocked for this wallet.',
     };
   }
 
   if (lower.includes('nonce') && lower.includes('too low')) {
     return {
-      title: 'Wallet transaction nonce is out of sync',
+      title: 'Wallet nonce is out of sync',
       body: 'Refresh the wallet, then retry so the next transaction uses the correct nonce.',
     };
   }
@@ -104,7 +104,7 @@ function classifyError(message: string) {
   }
 
   return {
-    title: 'Mint flow needs another pass',
+    title: 'The flow needs another pass',
     body: message,
   };
 }
@@ -165,6 +165,7 @@ export default function EnterPage() {
   const wrongChain = isConnected && chainId !== CHAIN_ID;
   const tokenId = Number(hasMinted || 0);
   const hasMintedSeed = tokenId > 0;
+
   const flowStage = getFlowStage({
     isConnected,
     wrongChain,
@@ -175,25 +176,11 @@ export default function EnterPage() {
     result,
     error,
   });
+
   const errorCopy = useMemo(
     () => (error ? classifyError(error) : null),
     [error]
   );
-  const statusStripItems = [
-    { label: 'Network', value: 'Arc Testnet' },
-    { label: 'Threshold', value: 'Score >= 60' },
-    { label: 'Passport', value: 'Seed Identity' },
-    {
-      label: 'Status',
-      value: !isConnected
-        ? 'Not connected'
-        : wrongChain
-          ? 'Wrong chain'
-          : hasMintedSeed || txHash
-            ? 'Minted'
-            : 'Live',
-    },
-  ];
 
   useEffect(() => {
     setEvaluating(false);
@@ -259,62 +246,62 @@ export default function EnterPage() {
   > = {
     visitor: {
       label: 'Visitor',
-      title: 'Connect a wallet to open your passport check.',
-      body: 'ArcSprout evaluates wallet activity before it becomes a community passport. Start by connecting on Arc Testnet.',
+      title: 'Connect a wallet to start the readiness check.',
+      body: 'ArcSprout evaluates real Arc activity before a community passport is minted.',
       tone: 'neutral',
     },
     'wallet-connected': {
       label: 'Ready',
-      title: 'Wallet connected. You can run the eligibility check.',
-      body: 'This stage prepares the first trust pass before a passport seed can be minted.',
+      title: 'Wallet connected. Run the eligibility check when you are ready.',
+      body: 'This stage prepares the signed result that decides whether the base passport can be minted.',
       tone: 'neutral',
     },
     'wrong-network': {
       label: 'Wrong network',
-      title: 'Switch to Arc Testnet before you continue.',
-      body: 'The wallet is connected, but the mint contract lives on Arc Testnet. Align the network first.',
+      title: 'Switch to Arc Testnet before continuing.',
+      body: 'The wallet is connected, but the contract lives on Arc Testnet.',
       tone: 'warning',
     },
     evaluating: {
       label: 'Evaluating',
-      title: 'Reading trust signals and generating your result.',
-      body: 'The oracle is checking whether this wallet deserves the first passport layer.',
+      title: 'Reading trust signals from this wallet.',
+      body: 'The oracle is checking participation, retention, and Arc-native activity before scoring the wallet.',
       tone: 'neutral',
     },
     eligible: {
       label: 'Eligible',
-      title: 'Your passport seed is approved.',
-      body: 'The eligibility proof is ready. Confirm the wallet action to complete the mint.',
+      title: 'The base passport is ready to mint.',
+      body: 'The signed result has been created. Confirm the wallet action to complete the mint.',
       tone: 'success',
     },
     'awaiting-confirmation': {
       label: 'Awaiting confirmation',
       title: 'Confirm the transaction in your wallet.',
-      body: 'Nothing is onchain yet. This is the final wallet approval before the passport seed is sent.',
+      body: 'Nothing is onchain yet. This is the last wallet approval before minting the base passport.',
       tone: 'warning',
     },
     minting: {
       label: 'Minting',
-      title: 'Transaction submitted. Waiting for the network.',
-      body: 'ArcSprout is turning your eligibility proof into a live passport seed on Arc Testnet.',
+      title: 'The transaction is on its way through Arc.',
+      body: 'ArcSprout is converting the signed eligibility proof into a live passport seed.',
       tone: 'neutral',
     },
     'mint-success': {
       label: 'Minted',
-      title: 'Your ArcSprout passport seed is live.',
-      body: 'You have completed the first identity layer. Future levels, quests, and perks can grow from here.',
+      title: 'The ArcSprout passport seed is now live.',
+      body: 'The first identity layer is complete. Future levels, roles, and perks can grow from here.',
       tone: 'success',
     },
     'not-eligible': {
       label: 'Not eligible yet',
-      title: 'This wallet needs more signal before minting.',
-      body: 'ArcSprout keeps the gate meaningful. Improve the wallet history, then return for another pass.',
+      title: 'This wallet needs a stronger Arc trail first.',
+      body: 'ArcSprout keeps the gate meaningful. Build a better activity record and come back for another pass.',
       tone: 'warning',
     },
     error: {
       label: 'Needs attention',
-      title: errorCopy?.title || 'Something interrupted the flow.',
-      body: errorCopy?.body || 'Please retry the flow.',
+      title: errorCopy?.title || 'The flow was interrupted.',
+      body: errorCopy?.body || 'Retry the flow when you are ready.',
       tone: 'danger',
     },
   };
@@ -331,38 +318,52 @@ export default function EnterPage() {
           ? 'Minted'
           : 'Pending';
 
+  const statusStripItems = [
+    { label: 'Network', value: 'Arc Testnet' },
+    { label: 'Threshold', value: 'Score >= 60' },
+    { label: 'Passport', value: 'Seed layer' },
+    { label: 'Status', value: activeStage.label },
+  ];
+
   return (
-    <main className="page-shell">
+    <main className="page-shell" id="main-content">
+      <a href="#wallet-details" className="skip-link">
+        Skip to wallet details
+      </a>
       <header className="topbar">
-        <div className="brand-mark" aria-label="ArcSprout">
-          A
-        </div>
+        <Link href="/" className="brand-lockup" aria-label="ArcSprout">
+          <div className="brand-mark">A</div>
+          <div className="brand-copy">
+            <strong>ArcSprout</strong>
+            <span>Arc community passport</span>
+          </div>
+        </Link>
+
         <nav className="topnav" aria-label="Primary">
-          <Link href="/#how-it-works">How It Works</Link>
-          <Link href="/#progression">Progression</Link>
-          <Link href="/#entry-path">Entry Path</Link>
           <Link href="/#overview">Overview</Link>
+          <Link href="/#how-it-works">Flow</Link>
+          <Link href="/#progression">Progression</Link>
+          <Link href="/#entry-path">Eligibility</Link>
         </nav>
+
         <div className="topbar-actions">
           <Link href="/" className="btn btn-secondary compact-btn">
-            Back to Overview
+            Back to overview
           </Link>
         </div>
       </header>
 
-      <section className="hero-grid enter-hero">
-        <div className="glass-card aurora-panel enter-hero-panel">
-          <div className="eyebrow">ArcSprout Entry</div>
-          <h1 className="enter-title">
-            <span>Check your</span>
-            <span>wallet for</span>
-            <span>base passport</span>
-            <span>readiness.</span>
-          </h1>
-          <p className="hero-body">
-            ArcSprout reads real Arc activity, returns a signed eligibility
-            result, and lets the connected wallet mint the first identity layer
-            when the score is ready.
+      <section className="enter-shell">
+        <div className="enter-main glass-card">
+          <div className={`status-badge tone-${activeStage.tone}`}>
+            {activeStage.label}
+          </div>
+          <div className="eyebrow">ArcSprout entry</div>
+          <h1 className="enter-title">Check if this wallet is ready for its first Arc passport.</h1>
+          <p className="hero-body enter-body">
+            ArcSprout reads real Arc activity, creates a signed eligibility
+            result, and lets the connected wallet mint the base seed if the
+            threshold is met.
           </p>
 
           <div className="hero-actions">
@@ -381,76 +382,75 @@ export default function EnterPage() {
               {hasMintedSeed || txHash
                 ? 'Passport already minted'
                 : evaluating
-                ? 'Evaluating wallet...'
-                : txStep === 'awaiting-confirmation'
-                  ? 'Waiting for wallet...'
-                  : txStep === 'minting'
-                    ? 'Minting on Arc...'
-                    : 'Run Passport Check'}
+                  ? 'Evaluating wallet...'
+                  : txStep === 'awaiting-confirmation'
+                    ? 'Waiting for wallet...'
+                    : txStep === 'minting'
+                      ? 'Minting on Arc...'
+                      : 'Run wallet check'}
             </button>
-            <a href="#flow-details" className="btn btn-secondary">
-              See Flow Details
+            <a href="#wallet-details" className="btn btn-secondary">
+              View wallet details
             </a>
           </div>
 
-          <div className="hero-trust-list">
+          <div className="enter-copy-block">
+            <h2>{activeStage.title}</h2>
+            <p>{activeStage.body}</p>
+          </div>
+
+          <div className="trust-row">
             {enterTrustChecklist.map((item) => (
-              <div key={item} className="trust-pill">
-                <span className="trust-dot" />
+              <div key={item} className="trust-chip">
+                <span className="trust-chip-dot" aria-hidden="true" />
                 {item}
               </div>
             ))}
           </div>
         </div>
 
-        <aside className="glass-card status-shell enter-status-shell">
-          <div className="figure-top enter-figure-top">
-            <div className="figure-chip">Arc Testnet</div>
-            <div className="score-orb">
-              <div className="score-orb-inner">
+        <aside className="enter-side glass-card">
+          <div className="hero-side-top">
+            <span className="figure-chip">Arc Testnet</span>
+            <span className="mini-note">Wallet-native mint</span>
+          </div>
+
+          <div className="enter-score-shell">
+            <div className="arc-score-ring arc-score-ring-large">
+              <div className="arc-score-core">
                 <span>Score</span>
                 <strong>{displayScore}</strong>
               </div>
             </div>
           </div>
 
-          <div className="home-rail-list">
-            <div className="home-rail-row">
+          <div className="rail-grid">
+            <div className="rail-row">
               <span>Connected wallet</span>
               <strong>
                 {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not connected'}
               </strong>
             </div>
-            <div className="home-rail-row">
+            <div className="rail-row">
               <span>Current stage</span>
               <strong>{activeStage.label}</strong>
             </div>
-            <div className="home-rail-row">
+            <div className="rail-row">
               <span>Eligibility</span>
               <strong>{eligibilityLabel}</strong>
             </div>
           </div>
 
-          <div className={`status-badge tone-${activeStage.tone}`}>
-            {activeStage.label}
-          </div>
-          <h2>{activeStage.title}</h2>
-          <p>{activeStage.body}</p>
-
-          <div className="connect-shell enter-connect-shell">
+          <div className="connect-shell">
             <ConnectButton />
           </div>
 
-          <div className="status-meta">
-            <div className="status-meta-row">
-              <span>Connected wallet</span>
-              <strong>{address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not connected'}</strong>
-            </div>
-            <div className="status-meta-row">
+          <div className="status-rows">
+            <div className="status-row-card">
               <span>Chain</span>
               <strong>{isConnected ? chainId || 'Unknown' : 'Pending'}</strong>
             </div>
-            <div className="status-meta-row">
+            <div className="status-row-card">
               <span>Passport score</span>
               <strong>
                 {result?.score !== undefined
@@ -458,14 +458,8 @@ export default function EnterPage() {
                   : 'Not scored yet'}
               </strong>
             </div>
-            <div className="status-meta-row">
-              <span>Eligibility</span>
-              <strong>
-                {eligibilityLabel}
-              </strong>
-            </div>
-            <div className="status-meta-row">
-              <span>Last tx</span>
+            <div className="status-row-card">
+              <span>Explorer</span>
               <strong>
                 {txHash || submittedTxHash ? (
                   <a
@@ -473,7 +467,7 @@ export default function EnterPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    View on explorer
+                    View transaction
                   </a>
                 ) : (
                   'No transaction yet'
@@ -484,32 +478,19 @@ export default function EnterPage() {
         </aside>
       </section>
 
-      <section className="status-strip glass-card enter-status-strip">
+      <section className="status-band glass-card">
         {statusStripItems.map((item) => (
-          <div key={item.label} className="status-strip-item">
+          <div key={item.label} className="status-band-item">
             <span>{item.label}</span>
             <strong>{item.value}</strong>
           </div>
         ))}
       </section>
 
-      <section className="section-grid dual-column" id="flow-details">
+      <section className="detail-grid" id="wallet-details">
         <div className="glass-card">
-          <div className="eyebrow">Wallet trust</div>
-          <h2>The mint stays wallet-native and explainable.</h2>
-
-          <div className="slot-list compact-list">
-            {enterTrustChecklist.map((item) => (
-              <div key={item} className="slot-card">
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="glass-card">
-          <div className="eyebrow">Product state machine</div>
-          <h2>Every step stays visible to the user.</h2>
+          <div className="eyebrow">Wallet trust model</div>
+          <h2>Every important state stays visible to the user.</h2>
           <div className="stage-grid">
             {[
               'visitor',
@@ -529,6 +510,18 @@ export default function EnterPage() {
             ))}
           </div>
         </div>
+
+        <div className="glass-card">
+          <div className="eyebrow">After mint</div>
+          <h2>Make the first seed feel like the start of something larger.</h2>
+          <div className="stack-list">
+            {postMintSteps.map((step) => (
+              <div key={step} className="slot-card glass-card subtle-card">
+                {step}
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {tokenId > 0 && (
@@ -536,8 +529,8 @@ export default function EnterPage() {
           <div className="eyebrow">Existing passport</div>
           <h2>This wallet already holds an ArcSprout seed.</h2>
           <p>
-            Token ID <strong>{tokenId}</strong> is already active, so this wallet
-            has passed the first entry gate.
+            Token ID <strong>{tokenId}</strong> is active, so this wallet has
+            already passed the first entry gate.
           </p>
         </section>
       )}
@@ -545,21 +538,23 @@ export default function EnterPage() {
       {result && flowStage === 'not-eligible' && (
         <section className="glass-card warning-panel">
           <div className="eyebrow">Eligibility guidance</div>
-          <h2>Improve the wallet signal, then return.</h2>
+          <h2>Build a stronger Arc trail, then try again.</h2>
           <p>{result.reason}</p>
+
           {result.missingSignals && result.missingSignals.length > 0 && (
-            <div className="slot-list compact-list">
+            <div className="stack-list">
               {result.missingSignals.map((signal) => (
-                <div key={signal} className="slot-card">
-                  Missing: {signal}
+                <div key={signal} className="slot-card glass-card subtle-card">
+                  Missing signal: {signal}
                 </div>
               ))}
             </div>
           )}
-          {result.actions && (
-            <div className="slot-list compact-list">
+
+          {result.actions && result.actions.length > 0 && (
+            <div className="stack-list">
               {result.actions.map((action) => (
-                <div key={action} className="slot-card">
+                <div key={action} className="slot-card glass-card subtle-card">
                   {action}
                 </div>
               ))}
@@ -571,65 +566,67 @@ export default function EnterPage() {
       {result?.signals && (
         <section className="glass-card">
           <div className="eyebrow">Score breakdown</div>
-          <h2>How the wallet reached this result.</h2>
+          <h2>How this wallet reached its current result.</h2>
+
           {breakdown && (
-            <div className="feature-grid">
-              <article className="feature-card">
-                <div className="eyebrow">Arc Presence</div>
-                <h3>{breakdown.arcPresence}/25</h3>
-                <p>Basic Arc usage and onchain presence.</p>
+            <div className="metrics-grid">
+              <article className="metric-card">
+                <span>Arc presence</span>
+                <strong>{breakdown.arcPresence}/25</strong>
+                <p>Basic Arc usage and visible onchain presence.</p>
               </article>
-              <article className="feature-card">
-                <div className="eyebrow">Retention</div>
-                <h3>{breakdown.retention}/20</h3>
-                <p>Return behavior across days and time.</p>
+              <article className="metric-card">
+                <span>Retention</span>
+                <strong>{breakdown.retention}/20</strong>
+                <p>Whether the wallet comes back over time.</p>
               </article>
-              <article className="feature-card">
-                <div className="eyebrow">Economic</div>
-                <h3>{breakdown.economicParticipation}/25</h3>
-                <p>Early proxy for useful ecosystem activity.</p>
+              <article className="metric-card">
+                <span>Economic participation</span>
+                <strong>{breakdown.economicParticipation}/20</strong>
+                <p>Useful wallet actions instead of empty movement.</p>
               </article>
-              <article className="feature-card">
-                <div className="eyebrow">Alignment</div>
-                <h3>{breakdown.alignment}/15</h3>
-                <p>Signals that support ArcSprout growth.</p>
+              <article className="metric-card">
+                <span>Alignment</span>
+                <strong>{breakdown.alignment}/20</strong>
+                <p>How closely the wallet reflects ArcSprout-ready behavior.</p>
               </article>
-              <article className="feature-card">
-                <div className="eyebrow">Quality Guard</div>
-                <h3>{breakdown.qualityGuard}/15</h3>
-                <p>Protection against low-quality spam behavior.</p>
+              <article className="metric-card">
+                <span>Quality guard</span>
+                <strong>{breakdown.qualityGuard}/15</strong>
+                <p>Extra filtering to keep the gate meaningful.</p>
               </article>
-              <article className="feature-card">
-                <div className="eyebrow">Total</div>
-                <h3>
+              <article className="metric-card metric-card-strong">
+                <span>Total</span>
+                <strong>
                   {breakdown.total}/{breakdown.threshold}
-                </h3>
-                <p>{breakdown.eligible ? 'Eligible' : 'Keep grinding for entry.'}</p>
+                </strong>
+                <p>
+                  {breakdown.eligible
+                    ? 'This wallet is ready for the first passport layer.'
+                    : 'This wallet still needs more meaningful signal.'}
+                </p>
               </article>
             </div>
           )}
 
-          <div className="eyebrow" style={{ marginTop: '1.25rem' }}>
-            Live signals
-          </div>
-          <div className="status-meta">
-            <div className="status-meta-row">
-              <span>Arc activity</span>
-              <strong>{result.signals.arcTxCount}</strong>
-            </div>
-            <div className="status-meta-row">
-              <span>Total nonce count</span>
+          <div className="signal-grid">
+            <div className="signal-card">
+              <span>Total transactions</span>
               <strong>{result.signals.txCount}</strong>
             </div>
-            <div className="status-meta-row">
-              <span>Native balance</span>
-              <strong>{result.signals.nativeBalance.toFixed(4)} ARC</strong>
+            <div className="signal-card">
+              <span>Arc transactions</span>
+              <strong>{result.signals.arcTxCount}</strong>
             </div>
-            <div className="status-meta-row">
-              <span>Wallet age proxy</span>
+            <div className="signal-card">
+              <span>Native balance</span>
+              <strong>{result.signals.nativeBalance.toFixed(4)}</strong>
+            </div>
+            <div className="signal-card">
+              <span>Wallet age</span>
               <strong>{result.signals.walletAgeDays} days</strong>
             </div>
-            <div className="status-meta-row">
+            <div className="signal-card">
               <span>Active days</span>
               <strong>{result.signals.activeDays}</strong>
             </div>
@@ -637,77 +634,13 @@ export default function EnterPage() {
         </section>
       )}
 
-      {flowStage === 'mint-success' && (
-        <section className="glass-card success-panel">
-          <div className="eyebrow">Post-mint state</div>
-          <h2>Your entry is complete. Here is what comes next.</h2>
-          {result?.breakdown && (
-            <p>
-              Final score <strong>{result.breakdown.total}/{result.breakdown.threshold}</strong>, minted from a wallet that earned its place.
-            </p>
-          )}
-          <div className="slot-list compact-list">
-            {postMintSteps.map((step) => (
-              <div key={step} className="slot-card">
-                {step}
-              </div>
-            ))}
-          </div>
-
-          {(txHash || submittedTxHash) && (
-            <div className="hero-actions">
-              <a
-                href={`https://testnet.arcscan.app/tx/${txHash || submittedTxHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary"
-              >
-                View Transaction
-              </a>
-            </div>
-          )}
-        </section>
-      )}
-
-      {flowStage === 'error' && errorCopy && (
+      {error && flowStage === 'error' && (
         <section className="glass-card error-panel">
-          <div className="eyebrow">Retry path</div>
-          <h2>{errorCopy.title}</h2>
-          <p>{errorCopy.body}</p>
-          {(txHash || submittedTxHash) && (
-            <div className="hero-actions">
-              <a
-                href={`https://testnet.arcscan.app/tx/${txHash || submittedTxHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-secondary"
-              >
-                Inspect Transaction
-              </a>
-            </div>
-          )}
-          {error && <pre>{error}</pre>}
+          <div className="eyebrow">Flow recovery</div>
+          <h2>{errorCopy?.title}</h2>
+          <p>{errorCopy?.body}</p>
         </section>
       )}
-
-      <section className="glass-card">
-        <div className="eyebrow">Future passport modules</div>
-        <h2>This screen is designed to expand without a rewrite.</h2>
-        <div className="feature-grid">
-          <article className="feature-card">
-            <h3>Level card slot</h3>
-            <p>Reserved for seed, sprout, and deeper status layers.</p>
-          </article>
-          <article className="feature-card">
-            <h3>Quest panel slot</h3>
-            <p>Ready for missions that help members improve score and access.</p>
-          </article>
-          <article className="feature-card">
-            <h3>Perk panel slot</h3>
-            <p>Ready for gated drops, channels, benefits, and campaign modules.</p>
-          </article>
-        </div>
-      </section>
     </main>
   );
 }
