@@ -260,7 +260,7 @@ export default function EnterPage() {
     visitor: {
       label: 'Visitor',
       title: 'Connect a wallet to open your passport check.',
-      body: 'ArcSprout evaluates a wallet before it becomes a community passport. Start by connecting on Arc Testnet.',
+      body: 'ArcSprout evaluates wallet activity before it becomes a community passport. Start by connecting on Arc Testnet.',
       tone: 'neutral',
     },
     'wallet-connected': {
@@ -354,16 +354,15 @@ export default function EnterPage() {
         <div className="glass-card aurora-panel enter-hero-panel">
           <div className="eyebrow">ArcSprout Entry</div>
           <h1 className="enter-title">
-            <span>Check if</span>
-            <span>your wallet</span>
-            <span>can earn</span>
+            <span>Check your</span>
+            <span>wallet for</span>
             <span>the first</span>
             <span>seed.</span>
           </h1>
           <p className="hero-body">
             ArcSprout turns real Arc activity into identity. Pass the trust
-            check, mint your seed, and grow into levels, quests, and fee-aware
-            membership over time.
+            check, mint your seed, and grow into levels, quests, and future
+            membership utility over time.
           </p>
 
           <div className="hero-actions">
@@ -415,13 +414,10 @@ export default function EnterPage() {
             </div>
           </div>
 
-          <div className="seed-avatar enter-seed-avatar" aria-hidden="true">
-            <div className="seed-head" />
-            <div className="seed-eye-bar" />
-            <div className="seed-body">
-              <div className="seed-logo">A</div>
-            </div>
-            <div className="seed-root" />
+          <div className="arc-emblem enter-arc-emblem" aria-hidden="true">
+            <span className="arc-emblem-glow" />
+            <span className="arc-emblem-arch" />
+            <span className="arc-emblem-foot" />
           </div>
 
           <div className={`status-badge tone-${activeStage.tone}`}>

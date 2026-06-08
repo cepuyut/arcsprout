@@ -32,12 +32,12 @@ export default function Home() {
         <div className="hero-copy glass-card aurora-panel">
           <div className="eyebrow">ArcSprout Passport</div>
           <h1 className="hero-title">
-            Your onchain identity grows with every move.
+            Onchain identity built for the Arc economy.
           </h1>
           <p className="hero-body">
-            ArcSprout evaluates your wallet activity. Earn your passport. Level
-            up your membership. Keep the system alive through meaningful Arc
-            participation.
+            ArcSprout evaluates wallet activity, mints a base passport for
+            eligible members, and leaves room for progression, access, and
+            future utility.
           </p>
 
           <div className="hero-actions">
@@ -70,13 +70,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="seed-avatar" aria-hidden="true">
-            <div className="seed-head" />
-            <div className="seed-eye-bar" />
-            <div className="seed-body">
-              <div className="seed-logo">A</div>
-            </div>
-            <div className="seed-root" />
+          <div className="arc-emblem" aria-hidden="true">
+            <span className="arc-emblem-glow" />
+            <span className="arc-emblem-arch" />
+            <span className="arc-emblem-foot" />
           </div>
 
           <div className="figure-foot">

@@ -3,8 +3,8 @@ import { Providers } from './providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ArcSprout — AI-Gated Community Entry',
-  description: 'Permissionless AI-gated NFT community entry on Arc Testnet',
+  title: 'ArcSprout — Arc Economy Passport',
+  description: 'A clean, professional onchain passport for Arc Testnet participation and future membership utility.',
 };
 
 export default function RootLayout({

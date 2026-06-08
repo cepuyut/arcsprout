@@ -1,39 +1,39 @@
 export const homeHeroStats = [
   { label: 'Network', value: 'Arc Testnet' },
-  { label: 'Mint Rule', value: 'Score >= 60' },
-  { label: 'Passport Type', value: 'Seed Identity' },
+  { label: 'Entry Rule', value: 'Score >= 60' },
+  { label: 'Passport Type', value: 'Base Identity' },
 ];
 
 export const homeTrustItems = [
-  'Wallet-native entry with onchain proof',
-  'AI oracle signs eligibility before minting',
-  'Future-ready for progression, perks, and quests',
+  'Wallet-native entry with signed eligibility',
+  'AI oracle checks Arc activity before minting',
+  'Ready for progression, perks, and future modules',
 ];
 
 export const homeFlowSteps = [
   {
     title: 'Connect your signal',
-    body: 'Bring your Arc wallet into the flow so ArcSprout can evaluate whether your activity looks like a real community participant.',
+    body: 'Bring your Arc wallet into the flow so ArcSprout can read a trustworthy onchain signal.',
   },
   {
     title: 'Earn your passport seed',
-    body: 'The oracle checks history, trust signals, and score threshold before generating a signed eligibility result.',
+    body: 'The oracle checks history, trust, and score before returning a signed eligibility result.',
   },
   {
     title: 'Grow into access and status',
-    body: 'Minting is the first layer. The longer-term product becomes a passport for levels, quests, and gated community moments.',
+    body: 'Minting is only the first layer. The passport can grow into levels, quests, and gated access.',
   },
 ];
 
 export const homeModules = [
   {
     eyebrow: 'Passport Layer',
-    title: 'Identity that can evolve',
-    body: 'ArcSprout starts as an entry pass today, then expands into progression, onchain reputation, and richer member states.',
+    title: 'Identity that can compound',
+    body: 'ArcSprout starts as an entry pass, then expands into progression, onchain reputation, and richer member states.',
   },
   {
     eyebrow: 'Community Layer',
-    title: 'Perks and belonging',
+    title: 'Utility that can deepen',
     body: 'Future drops can unlock private channels, campaigns, event access, and collaborations tied to the same passport.',
   },
   {
@@ -69,13 +69,13 @@ export const futureModuleSlots = [
 ];
 
 export const enterTrustChecklist = [
-  'Mint is always executed from the connected wallet',
-  'Eligibility proof is signed before you send a transaction',
-  'Every state is visible so you know what happens next',
+  'Mint always executes from the connected wallet',
+  'Eligibility is signed before the transaction is sent',
+  'Every state stays visible so the flow never feels hidden',
 ];
 
 export const postMintSteps = [
-  'Save your explorer link as proof of passport activation.',
+  'Save the explorer link as proof of passport activation.',
   'Use this identity for future levels, quests, and member unlocks.',
   'Return later as ArcSprout expands into a modular community passport.',
 ];
