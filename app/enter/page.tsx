@@ -339,9 +339,9 @@ export default function EnterPage() {
         </div>
         <nav className="topnav" aria-label="Primary">
           <Link href="/#how-it-works">How It Works</Link>
-          <Link href="/#tiers">Tiers</Link>
-          <Link href="/#activity">Activity</Link>
-          <Link href="/#docs">Docs</Link>
+          <Link href="/#progression">Progression</Link>
+          <Link href="/#entry-path">Entry Path</Link>
+          <Link href="/#overview">Overview</Link>
         </nav>
         <div className="topbar-actions">
           <Link href="/" className="btn btn-secondary compact-btn">
