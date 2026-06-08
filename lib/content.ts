@@ -2,12 +2,13 @@ export const homeHeroStats = [
   { label: 'Network', value: 'Arc Testnet' },
   { label: 'Fee Model', value: 'USDC-native' },
   { label: 'Community', value: 'Architects-ready' },
+  { label: 'Entry', value: 'Wallet score gate' },
 ];
 
 export const homeTrustItems = [
   'Wallet-native entry with signed eligibility',
   'AI oracle checks Arc activity before minting',
-  'Ready for progression, perks, and future modules',
+  'Progression stays visible after mint',
 ];
 
 export const homeFlowSteps = [
@@ -20,16 +21,16 @@ export const homeFlowSteps = [
     body: 'The oracle checks history, trust, and score before returning a signed eligibility result.',
   },
   {
-    title: 'Grow into access and status',
-    body: 'Minting is only the first layer. The passport can grow into levels, quests, and gated access.',
+    title: 'Mint and keep growing',
+    body: 'Minting is the beginning of a progression path for levels, roles, access, and future utility.',
   },
 ];
 
 export const homeModules = [
   {
     eyebrow: 'Arc House',
-    title: 'A community base that stays transparent',
-    body: 'ArcSprout is meant to feel like a member home: clear rules, visible progress, and room for people to stay involved.',
+    title: 'A clean home base for community identity',
+    body: 'ArcSprout should feel like a member home with clear rules, visible progress, and room for people to stay involved.',
   },
   {
     eyebrow: 'Architects',
@@ -66,6 +67,49 @@ export const futureModuleSlots = [
   'Member perks panel for gated drops and roles',
   'Progress tracker for levels, streaks, and milestones',
   'Community status card for future campaigns and access',
+];
+
+export const homeProofCards = [
+  {
+    label: 'Why it exists',
+    title: 'Membership identity for Arc',
+    body: 'ArcSprout is the identity layer for people who show real participation across the Arc ecosystem.',
+  },
+  {
+    label: 'How it feels',
+    title: 'Clear, calm, and wallet-native',
+    body: 'The site should feel trustworthy for first-time users and still useful for crypto-native builders.',
+  },
+  {
+    label: 'What comes next',
+    title: 'Progression beyond one mint',
+    body: 'The base passport opens the door to points, roles, quests, and long-term value that can evolve over time.',
+  },
+];
+
+export const homeEligibilityActions = [
+  {
+    title: 'Hold activity on Arc',
+    body: 'Sustained usage is stronger than one-off transactions.',
+  },
+  {
+    title: 'Use live ecosystem rails',
+    body: 'Swaps, bridging, and onchain actions build a better trust trail.',
+  },
+  {
+    title: 'Return and participate',
+    body: 'The score should reward consistency, not just speed.',
+  },
+  {
+    title: 'Unlock the base passport',
+    body: 'Once the threshold is met, mint the first identity layer.',
+  },
+];
+
+export const homeMembershipMoments = [
+  'Visible progression from Seed to future tiers',
+  'Role and perk unlocks tied to contribution',
+  'Future fee participation for capped higher tiers',
 ];
 
 export const enterTrustChecklist = [

@@ -356,13 +356,13 @@ export default function EnterPage() {
           <h1 className="enter-title">
             <span>Check your</span>
             <span>wallet for</span>
-            <span>the first</span>
-            <span>seed.</span>
+            <span>base passport</span>
+            <span>readiness.</span>
           </h1>
           <p className="hero-body">
-            ArcSprout turns real Arc activity into identity. Pass the trust
-            check, mint your seed, and grow into levels, quests, and future
-            membership utility over time.
+            ArcSprout reads real Arc activity, returns a signed eligibility
+            result, and lets the connected wallet mint the first identity layer
+            when the score is ready.
           </p>
 
           <div className="hero-actions">
@@ -414,18 +414,20 @@ export default function EnterPage() {
             </div>
           </div>
 
-          <div className="community-stack enter-community-stack" aria-hidden="true">
-            <div className="community-row">
-              <span>Arc House</span>
-              <strong>Recognition path</strong>
+          <div className="home-rail-list">
+            <div className="home-rail-row">
+              <span>Connected wallet</span>
+              <strong>
+                {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Not connected'}
+              </strong>
             </div>
-            <div className="community-row">
-              <span>Architects</span>
-              <strong>Contribution loop</strong>
+            <div className="home-rail-row">
+              <span>Current stage</span>
+              <strong>{activeStage.label}</strong>
             </div>
-            <div className="community-row">
-              <span>Arc Testnet</span>
-              <strong>Stablecoin-native</strong>
+            <div className="home-rail-row">
+              <span>Eligibility</span>
+              <strong>{eligibilityLabel}</strong>
             </div>
           </div>
 
